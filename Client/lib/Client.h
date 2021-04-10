@@ -17,5 +17,6 @@ public:
 	void SetAddr(int port);
 	void Connect();
 	void Recv(char msg[BYTE_N]);
+	void Send(char msg[BYTE_N]);
 };
 

@@ -33,6 +33,11 @@ void Client::Connect()
 	}
 }
 
+void Client::Send(char msg[BYTE_N])
+{
+	send(connection, msg, sizeof(msg), NULL);
+}
+
 void Client::Recv(char msg[BYTE_N])
 {
 	recv(connection, msg, sizeof(msg), NULL);

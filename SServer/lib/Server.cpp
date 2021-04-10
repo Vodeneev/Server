@@ -26,7 +26,7 @@ SOCKET Server::Connect()
 	int sizeofaddr = sizeof(addr);
 	bind(slisten, (SOCKADDR*)&addr, sizeof(addr)); //associates a local address with a socket
 	listen(slisten, SOMAXCONN); // listening for an incoming connection
-	SOCKET newConnection = accept(slisten, (SOCKADDR*)&addr, &sizeofaddr); // established a connection with the client
+	SOCKET newConnection = accept(slisten, (SOCKADDR*)&addr, &sizeofaddr);
 	if (newConnection == 0)
 	{
 		std::cout << "Error connected" << std::endl;
@@ -35,6 +35,7 @@ SOCKET Server::Connect()
 	{
 		std::cout << "Connected from server" << std::endl;
 	}
+
 	return newConnection;
 }
 
@@ -43,5 +44,10 @@ void Server::Send(char msg[BYTE_N], SOCKET connection)
 	send(connection, msg, sizeof(msg), NULL);
 }
 
+void Server::Recv(char msg[BYTE_N], SOCKET connection)
+{
+	recv(connection, msg, sizeof(msg), NULL);
+	std::cout << msg << std::endl;
+}
 
 
