@@ -4,8 +4,9 @@
 #include <WinSock2.h>
 #include <vector>
 #include<thread>
+#include<mutex>
 #define BYTE_N 256
-#define N_CLIENTS 2
+#define DATABASE_SIZE 10
 
 #pragma warning(disable: 4996)
 
@@ -15,12 +16,14 @@ class Server
 	SOCKADDR_IN addr;
 	SOCKET slisten;
 	int counter;
+	std::vector<char*> Messages;
+	std::mutex mtx;
 public:
 	Server();
 	void SetAddr(int port);
 	SOCKET Connect();
 	void Send(char msg[BYTE_N], SOCKET connection);
-	void Server::Recv(char msg[BYTE_N], SOCKET connection);
+	void Server::Recv(SOCKET connection);
 	int Counter();
 };
 

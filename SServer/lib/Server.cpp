@@ -16,6 +16,8 @@ Server::Server()
 	slisten = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	counter = 0;
+
+	Messages.resize(DATABASE_SIZE);
 }
 
 void Server::SetAddr(int port)
@@ -42,10 +44,27 @@ void Server::Send(char msg[BYTE_N], SOCKET connection)
 	send(connection, msg, sizeof(msg), NULL);
 }
 
-void Server::Recv(char msg[BYTE_N], SOCKET connection)
+void Server::Recv(SOCKET connection)
 {
-	recv(connection, msg, sizeof(msg), NULL);
-	std::cout << msg << std::endl;
+	mtx.lock();
+	if (Messages.size() < counter)
+	{
+		std::vector<std::vector<char>> temp(counter, std::vector<char>(BYTE_N));
+		for (int i = 0; i < counter - 1; i++)
+			for (int j = 0; j < BYTE_N; j++)
+				temp[i][j] = Messages[i][j];
+		Messages.resize(counter + DATABASE_SIZE);
+		for (int i = 0; i < counter - 1; i++)
+		{
+			Messages[i] = new char[BYTE_N];
+			for (int j = 0; j < BYTE_N; j++)
+				Messages[i][j] = temp[i][j];
+		}
+	}
+	mtx.unlock();
+	Messages[counter - 1] = new char[BYTE_N];
+	recv(connection, Messages[counter - 1], sizeof(Messages[counter - 1]), NULL);
+	std::cout << Messages[counter - 1] << std::endl;
 }
 
 int Server::Counter()
