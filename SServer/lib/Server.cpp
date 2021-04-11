@@ -14,6 +14,8 @@ Server::Server()
 	addr.sin_family = AF_INET; // internet protocol family
 
 	slisten = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+	counter = 0;
 }
 
 void Server::SetAddr(int port)
@@ -26,16 +28,12 @@ SOCKET Server::Connect()
 	int sizeofaddr = sizeof(addr);
 	bind(slisten, (SOCKADDR*)&addr, sizeof(addr)); //associates a local address with a socket
 	listen(slisten, SOMAXCONN); // listening for an incoming connection
-	SOCKET newConnection = accept(slisten, (SOCKADDR*)&addr, &sizeofaddr);
-	if (newConnection == 0)
+	SOCKET newConnection = 0;
+	while (newConnection == 0)
 	{
-		std::cout << "Error connected" << std::endl;
+		newConnection = accept(slisten, (SOCKADDR*)&addr, &sizeofaddr);
 	}
-	else
-	{
-		std::cout << "Connected from server" << std::endl;
-	}
-
+	counter++;
 	return newConnection;
 }
 
@@ -50,4 +48,8 @@ void Server::Recv(char msg[BYTE_N], SOCKET connection)
 	std::cout << msg << std::endl;
 }
 
+int Server::Counter()
+{
+	return counter;
+}
 

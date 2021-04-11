@@ -14,12 +14,13 @@ class Server
 	WSAData wsaData;
 	SOCKADDR_IN addr;
 	SOCKET slisten;
-
+	int counter;
 public:
 	Server();
 	void SetAddr(int port);
 	SOCKET Connect();
 	void Send(char msg[BYTE_N], SOCKET connection);
 	void Server::Recv(char msg[BYTE_N], SOCKET connection);
+	int Counter();
 };
 

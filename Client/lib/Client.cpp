@@ -23,14 +23,13 @@ void Client::Connect()
 {
 	connection = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	if (connect(connection, (SOCKADDR*)&addr, sizeof(addr)) != 0)
+	while (connect(connection, (SOCKADDR*)&addr, sizeof(addr)) != 0)
 	{
-		std::cout << "Error connection from client" << std::endl;
+
 	}
-	else
-	{
-		std::cout << "Connected\n";
-	}
+	
+	std::cout << "Connected\n";
+
 }
 
 void Client::Send(char msg[BYTE_N])
