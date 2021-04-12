@@ -32,16 +32,11 @@ void Client::Connect()
 
 }
 
-void Client::Send(char msg[BYTE_N])
+void Client::Send(std::string msg)
 {
-	send(connection, msg, sizeof(msg), NULL);
+	int size_msg = msg.size();
+	send(connection, (char*)&size_msg, sizeof(int), NULL);
+	send(connection, msg.c_str(), size_msg, NULL);
 }
-
-void Client::Recv(char msg[BYTE_N])
-{
-	recv(connection, msg, sizeof(msg), NULL);
-	std::cout << msg << std::endl;
-}
-
 
 

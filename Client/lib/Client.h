@@ -3,6 +3,7 @@
 #include <iostream>
 #include<WinSock2.h>
 #define BYTE_N 256
+#include <string>
 
 #pragma warning(disable: 4996)
 
@@ -16,7 +17,6 @@ public:
 	Client();
 	void SetAddr(int port);
 	void Connect();
-	void Recv(char msg[BYTE_N]);
-	void Send(char msg[BYTE_N]);
+	void Send(std::string msg);
 };
 

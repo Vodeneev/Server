@@ -6,7 +6,8 @@
 #include<thread>
 #include<mutex>
 #define BYTE_N 256
-#define DATABASE_SIZE 10
+#define DATABASE_SIZE 2
+#include <string>
 
 #pragma warning(disable: 4996)
 
@@ -16,7 +17,7 @@ class Server
 	SOCKADDR_IN addr;
 	SOCKET slisten;
 	int counter;
-	std::vector<char*> Messages;
+	std::vector<std::string> Messages;
 	std::mutex mtx;
 public:
 	Server();

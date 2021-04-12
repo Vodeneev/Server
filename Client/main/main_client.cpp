@@ -1,9 +1,14 @@
 #include "Client.h"
 
-int main()
+int main(int argc, char** argv)
 {
 	Client cl;
 	cl.Connect();
-	char msg[256] = "Hello 1";
-	cl.Send(msg);
+	if (argc == 1)
+	{
+		std::string msg = "Invalid id";
+		cl.Send(msg);
+	}
+	else
+		cl.Send(argv[1]);
 }
