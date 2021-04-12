@@ -53,20 +53,20 @@ void Server::Recv(SOCKET connection)
 		for (int i = 0; i < counter - 1; i++)
 			temp[i] = Messages[i];
 
-		Messages.resize(counter + DATABASE_SIZE);
+		Messages.resize(counter + (size_t)DATABASE_SIZE);
 
 		for (int i = 0; i < counter - 1; i++)
 			Messages[i] = temp[i];
 	}
 	mtx.unlock();
-	int size_msg;
-	recv(connection, (char*)&size_msg, sizeof(int), NULL);
-	char* msg = new char[size_msg + 1];
+	size_t size_msg;
+	recv(connection, (char*)&size_msg, sizeof(size_t), NULL);
+	char* msg = new char[size_msg + (size_t)1];
 	msg[size_msg] = '\0';
 	recv(connection, msg, size_msg, NULL);
-	Messages[counter - 1] = msg;
+	Messages[counter - (size_t)1] = msg;
 	mtx.lock();
-	std::cout << Messages[counter - 1] << std::endl;
+	std::cout << Messages[counter - (size_t)1] << std::endl;
 	mtx.unlock();
 }
 

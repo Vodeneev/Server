@@ -16,7 +16,7 @@ class Server
 	WSAData wsaData;
 	SOCKADDR_IN addr;
 	SOCKET slisten;
-	int counter;
+	size_t counter;
 	std::vector<std::string> Messages;
 	std::mutex mtx;
 public:

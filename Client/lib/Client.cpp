@@ -34,8 +34,8 @@ void Client::Connect()
 
 void Client::Send(std::string msg)
 {
-	int size_msg = msg.size();
-	send(connection, (char*)&size_msg, sizeof(int), NULL);
+	size_t size_msg = msg.size();
+	send(connection, (char*)&size_msg, sizeof(size_t), NULL);
 	send(connection, msg.c_str(), size_msg, NULL);
 }
 
