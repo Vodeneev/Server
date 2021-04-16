@@ -2,20 +2,27 @@
 #include<functional>
 
 
-
 int main()
 {
 	Server S;
-	std::vector<std::thread> Threads;
-	std::vector<SOCKET> connections;
-	while (true)
+	std::string end_word = " ";
+	std::mutex mtx;
+
+	S.Connect();
+
+	std::thread l(&Server::StartWork, std::ref(S));
+
+	while (end_word != "stop")
 	{
-		connections.push_back(S.Connect());
-		Threads.push_back(std::thread(&Server::Recv, std::ref(S), connections[S.Counter() - 1]));
+		std::cout << "Enter the 'stop' command to finish the operation : ";
+		std::cin >> end_word;
+		if (end_word != "stop")
+			std::cout << "Incorrect stop word" << std::endl;
 	}
 
-	for (int i = 0; i < Threads.size(); i++)
-	{
-		Threads[i].join();
-	}
-} 
+	S.StopWork();
+
+	l.join();
+
+	return 0;
+}

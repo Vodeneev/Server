@@ -5,9 +5,11 @@
 #include <vector>
 #include<thread>
 #include<mutex>
+#include <string>
+#include <unordered_map>
 #define BYTE_N 256
 #define DATABASE_SIZE 2
-#include <string>
+
 
 #pragma warning(disable: 4996)
 
@@ -16,15 +18,18 @@ class Server
 	WSAData wsaData;
 	SOCKADDR_IN addr;
 	SOCKET slisten;
-	size_t counter;
-	std::vector<std::string> Messages;
+	std::unordered_map<std::string, SOCKET> database;
 	std::mutex mtx;
+	std::mutex read;
+	bool start_stop;
 public:
 	Server();
 	void SetAddr(int port);
-	SOCKET Connect();
+	void Connect();
+	void StartWork();
 	void Send(char msg[BYTE_N], SOCKET connection);
 	void Server::Recv(SOCKET connection);
-	int Counter();
+	void StopWork();
+	bool Server::GetStartStop();
 };
 
