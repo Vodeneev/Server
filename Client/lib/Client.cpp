@@ -9,7 +9,7 @@ Client::Client()
 		exit(1);
 	}
 	addr.sin_addr.s_addr = inet_addr("127.0.0.1"); // all local host adresses
-	addr.sin_port = htons(1111);
+	addr.sin_port = htons(1000);
 	addr.sin_family = AF_INET; // internet protocol family
 	connection = SOCKET();
 }
@@ -34,8 +34,8 @@ void Client::Connect()
 
 void Client::Send(std::string msg)
 {
-	size_t size_msg = msg.size();
-	send(connection, (char*)&size_msg, sizeof(size_t), NULL);
+	int size_msg = msg.size();
+	send(connection, (char*)&size_msg, sizeof(int), NULL);
 	send(connection, msg.c_str(), size_msg, NULL);
 }
 

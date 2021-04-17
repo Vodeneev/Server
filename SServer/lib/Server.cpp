@@ -10,7 +10,7 @@ Server::Server()
 	}
 
 	addr.sin_addr.s_addr = inet_addr("127.0.0.1");; //local host adresses
-	addr.sin_port = htons(1111);
+	addr.sin_port = htons(1000);
 	addr.sin_family = AF_INET; // internet protocol family
 
 	slisten = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -37,30 +37,54 @@ void Server::Send(char msg[BYTE_N], SOCKET connection)
 
 void Server::Recv(SOCKET connection)
 {
-	size_t size_msg;
-	recv(connection, (char*)&size_msg, sizeof(size_t), NULL);
-	char* msg = new char[size_msg + (size_t)1];
+	int size_msg = 0;
+	recv(connection, (char*)&size_msg, sizeof(int), NULL);
+	int error = WSAGetLastError();
+	char* msg = new char[size_msg + 1];
 	msg[size_msg] = '\0';
 	recv(connection, msg, size_msg, NULL);
 	mtx.lock();
-	database[msg] = connection;
+	database.insert(Mymap::value_type(msg, connection));
 	mtx.unlock();
 	mtx.lock();
 	std::cout << msg << std::endl;
 	mtx.unlock();
+	delete msg;
+}
+
+void Server::Write_in_file(std::string path)
+{
+	std::ofstream out;
+	out.open(path);
+	if (out.is_open())
+	{
+		for(auto it = database.begin(); it != database.end(); it++)
+			out << it->first << std::endl;
+	}
+	out.close();
+}
+
+void Server::SetStartStop()
+{
+	read.lock();
+	write.lock();
+	start_stop = false;
+	write.unlock();
+	read.unlock();
 }
 
 void Server::StopWork()
 {
-	start_stop = false;
+	SetStartStop();
 	closesocket(slisten);
 }
 
+
 bool Server::GetStartStop()
 {
-	read.lock();
+	write.lock();
 	bool res = start_stop;
-	read.unlock();
+	write.unlock();
 	return res;
 }
 
@@ -73,7 +97,7 @@ void Server::StartWork()
 	while (true)
 	{
 		newConnection = accept(slisten, (SOCKADDR*)&addr, &sizeofaddr);
-		if (start_stop != true)
+		if (GetStartStop() != true)
 			break;
 		Threads.push_back(std::thread(&Server::Recv, this, newConnection));
 	}

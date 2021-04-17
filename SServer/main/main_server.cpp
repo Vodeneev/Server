@@ -14,7 +14,6 @@ int main()
 
 	while (end_word != "stop")
 	{
-		std::cout << "Enter the 'stop' command to finish the operation : ";
 		std::cin >> end_word;
 		if (end_word != "stop")
 			std::cout << "Incorrect stop word" << std::endl;
@@ -23,6 +22,9 @@ int main()
 	S.StopWork();
 
 	l.join();
+
+	std::string path = "C:/Users/1/Desktop/ClientsID";
+	S.Write_in_file(path);
 
 	return 0;
 }
