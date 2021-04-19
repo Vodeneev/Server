@@ -2,8 +2,8 @@
 #pragma comment(lib, "ws2_32.lib")
 #include <iostream>
 #include<WinSock2.h>
-#define BYTE_N 256
 #include <string>
+#include<fstream>
 
 #pragma warning(disable: 4996)
 
@@ -18,5 +18,6 @@ public:
 	void SetAddr(int port);
 	void Connect();
 	void Send(std::string msg);
+	void Send_zip(std::string msg, std::string path);
 };
 

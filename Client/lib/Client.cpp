@@ -39,4 +39,22 @@ void Client::Send(std::string msg)
 	send(connection, msg.c_str(), size_msg, NULL);
 }
 
+void Client::Send_zip(std::string msg, std::string path)
+{
+	std::ofstream file;
+	file.open(path);
+	if (file.is_open())
+	{
+		file << msg << std::endl;
+	}
+	file.close();
+
+	std::string WinRAR_param = "\"C:/Program Files/WinRAR/WinRar.exe\" a -afzip -ep ";
+	std::string path_zip = path + ".zip ";
+	system((WinRAR_param + path_zip + path).c_str());
+
+	int size_msg = path.size();
+	send(connection, (char*)&size_msg, sizeof(int), NULL);
+	send(connection, path.c_str(), size_msg, NULL);
+}
 

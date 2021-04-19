@@ -52,6 +52,41 @@ void Server::Recv(SOCKET connection)
 	delete msg;
 }
 
+void Server::Recv_zip(SOCKET connection)
+{
+	int size_msg = 0;
+	recv(connection, (char*)&size_msg, sizeof(int), NULL);
+	int error = WSAGetLastError();
+	char* path = new char[size_msg + 1];
+	path[size_msg] = '\0';
+	recv(connection, path, size_msg, NULL);
+
+	std::string WinRAR_param = "\"C:/Program Files/WinRAR/WinRar.exe\" x ";
+	std::string path_zip = std::string(path) + ".zip ";
+	system((WinRAR_param + path_zip + "C:/Users/1/Desktop/Server").c_str());
+
+	std::string name_file;
+	int i = size_msg - 1;
+	while (path[i] != '/')
+	{
+		name_file.push_back(path[i]);
+		i--;
+	}
+	std::reverse(name_file.begin(), name_file.end());
+
+	std::ifstream file("C:/Users/1/Desktop/Server/" + name_file);
+	std::string msg;
+	file >> msg;
+
+	mtx.lock();
+	database.insert(Mymap::value_type(msg, connection));
+	mtx.unlock();
+
+	mtx.lock();
+	std::cout << msg << std::endl;
+	mtx.unlock();
+}
+
 void Server::Write_in_file(std::string path)
 {
 	std::ofstream out;
@@ -99,7 +134,8 @@ void Server::StartWork()
 		newConnection = accept(slisten, (SOCKADDR*)&addr, &sizeofaddr);
 		if (GetStartStop() != true)
 			break;
-		Threads.push_back(std::thread(&Server::Recv, this, newConnection));
+		//Threads.push_back(std::thread(&Server::Recv, this, newConnection));
+		Threads.push_back(std::thread(&Server::Recv_zip, this, newConnection));
 	}
 
 	for (int i = 0; i < Threads.size(); i++)

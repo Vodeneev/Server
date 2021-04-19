@@ -31,6 +31,7 @@ public:
 	void StartWork();
 	void Send(char msg[BYTE_N], SOCKET connection);
 	void Server::Recv(SOCKET connection);
+	void Server::Recv_zip(SOCKET connection);
 	void Server::Write_in_file(std::string path);
 	void SetStartStop();
 	void StopWork();
