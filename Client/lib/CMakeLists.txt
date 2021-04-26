@@ -1,1 +1,1 @@
-create_project_lib(SServer)
+create_project_lib(Client)

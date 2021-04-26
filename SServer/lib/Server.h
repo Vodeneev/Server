@@ -8,18 +8,21 @@
 #include <string>
 #include <unordered_map>
 #include<fstream>
-#define BYTE_N 256
-#define DATABASE_SIZE 2
-typedef std::unordered_map<std::string, SOCKET> Mymap;
+#include"ClientData.h"
+
+#define DATABASE_SIZE 10
 
 #pragma warning(disable: 4996)
+
+typedef std::unordered_map<SOCKET, ClientData> Mymap;
+
 
 class Server
 {
 	WSAData wsaData;
 	SOCKADDR_IN addr;
 	SOCKET slisten;
-	std::unordered_map<std::string, SOCKET> database;
+	std::unordered_map<SOCKET, ClientData*> database;
 	std::mutex mtx;
 	std::mutex read;
 	std::mutex write;
@@ -29,9 +32,7 @@ public:
 	void SetAddr(int port);
 	void Connect();
 	void StartWork();
-	void Send(char msg[BYTE_N], SOCKET connection);
 	void Server::Recv(SOCKET connection);
-	void Server::Recv_zip(SOCKET connection);
 	void Server::Write_in_file(std::string path);
 	void SetStartStop();
 	void StopWork();

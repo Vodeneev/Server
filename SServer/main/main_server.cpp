@@ -1,9 +1,11 @@
 #include"Server.h"
 #include<functional>
+#include<time.h>
 
 
 int main()
 {
+	srand(time(NULL));
 	Server S;
 	std::string end_word = " ";
 	std::mutex mtx;

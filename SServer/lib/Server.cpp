@@ -14,7 +14,6 @@ Server::Server()
 	addr.sin_family = AF_INET; // internet protocol family
 
 	slisten = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	
 	start_stop = true;
 }
 
@@ -30,11 +29,6 @@ void Server::Connect()
 	listen(slisten, SOMAXCONN); // listening for an incoming connection
 }
 
-void Server::Send(char msg[BYTE_N], SOCKET connection)
-{
-	send(connection, msg, sizeof(msg), NULL);
-}
-
 void Server::Recv(SOCKET connection)
 {
 	int size_msg = 0;
@@ -43,48 +37,31 @@ void Server::Recv(SOCKET connection)
 	char* msg = new char[size_msg + 1];
 	msg[size_msg] = '\0';
 	recv(connection, msg, size_msg, NULL);
-	mtx.lock();
-	database.insert(Mymap::value_type(msg, connection));
-	mtx.unlock();
-	mtx.lock();
-	std::cout << msg << std::endl;
-	mtx.unlock();
-	delete msg;
-}
 
-void Server::Recv_zip(SOCKET connection)
-{
-	int size_msg = 0;
-	recv(connection, (char*)&size_msg, sizeof(int), NULL);
-	int error = WSAGetLastError();
-	char* path = new char[size_msg + 1];
-	path[size_msg] = '\0';
-	recv(connection, path, size_msg, NULL);
-
-	std::string WinRAR_param = "\"C:/Program Files/WinRAR/WinRar.exe\" x ";
-	std::string path_zip = std::string(path) + ".zip ";
-	system((WinRAR_param + path_zip + "C:/Users/1/Desktop/Server").c_str());
-
-	std::string name_file;
-	int i = size_msg - 1;
-	while (path[i] != '/')
+	ClientData* client;
+	if (msg[0] == 'a')
 	{
-		name_file.push_back(path[i]);
-		i--;
+		client = new Simple(msg);	
 	}
-	std::reverse(name_file.begin(), name_file.end());
 
-	std::ifstream file("C:/Users/1/Desktop/Server/" + name_file);
-	std::string msg;
-	file >> msg;
+	if (msg[0] == 'b')
+	{
+		client = new Zip(msg);
+	}
+
+	if (msg[0] == 'c')
+	{
+		client = new Zip2(msg);
+	}
 
 	mtx.lock();
-	database.insert(Mymap::value_type(msg, connection));
+	database[connection] = client;
+	mtx.unlock();
+	mtx.lock();
+	std::cout << std::endl << std::endl << "Client`s message   " << client->GetString() << std::endl << std::endl << std::endl;
 	mtx.unlock();
 
-	mtx.lock();
-	std::cout << msg << std::endl;
-	mtx.unlock();
+	delete[] msg;
 }
 
 void Server::Write_in_file(std::string path)
@@ -92,10 +69,8 @@ void Server::Write_in_file(std::string path)
 	std::ofstream out;
 	out.open(path);
 	if (out.is_open())
-	{
-		for(auto it = database.begin(); it != database.end(); it++)
-			out << it->first << std::endl;
-	}
+		for (auto it = database.begin(); it != database.end(); it++)
+			out << static_cast<std::string>(it->second->GetString()) << std::endl;
 	out.close();
 }
 
@@ -113,7 +88,6 @@ void Server::StopWork()
 	SetStartStop();
 	closesocket(slisten);
 }
-
 
 bool Server::GetStartStop()
 {
@@ -134,8 +108,7 @@ void Server::StartWork()
 		newConnection = accept(slisten, (SOCKADDR*)&addr, &sizeofaddr);
 		if (GetStartStop() != true)
 			break;
-		//Threads.push_back(std::thread(&Server::Recv, this, newConnection));
-		Threads.push_back(std::thread(&Server::Recv_zip, this, newConnection));
+		Threads.push_back(std::thread(&Server::Recv, this, newConnection));
 	}
 
 	for (int i = 0; i < Threads.size(); i++)

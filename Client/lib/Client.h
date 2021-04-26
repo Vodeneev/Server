@@ -4,6 +4,7 @@
 #include<WinSock2.h>
 #include <string>
 #include<fstream>
+#include"ClientData.h"
 
 #pragma warning(disable: 4996)
 
@@ -17,7 +18,6 @@ public:
 	Client();
 	void SetAddr(int port);
 	void Connect();
-	void Send(std::string msg);
-	void Send_zip(std::string msg, std::string path);
+	void Send(ClientData* msg);
 };
 
