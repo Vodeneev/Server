@@ -39,6 +39,7 @@ void Server::Recv(SOCKET connection)
 	recv(connection, msg, size_msg, NULL);
 
 	ClientData* client;
+
 	if (msg[0] == 'a')
 	{
 		client = new Simple(msg);	
@@ -58,7 +59,7 @@ void Server::Recv(SOCKET connection)
 	database[connection] = client;
 	mtx.unlock();
 	mtx.lock();
-	std::cout << std::endl << std::endl << "Client`s message   " << client->GetString() << std::endl << std::endl << std::endl;
+	std::cout << std::endl << std::endl << client->GetString() << std::endl << std::endl << std::endl;
 	mtx.unlock();
 
 	delete[] msg;

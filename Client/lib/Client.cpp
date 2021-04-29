@@ -23,10 +23,12 @@ void Client::Connect()
 {
 	connection = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	connect(connection, (SOCKADDR*)&addr, sizeof(addr));
+	while (connect(connection, (SOCKADDR*)&addr, sizeof(addr)) != 0)
+	{
+
+	}
 	
 	std::cout << "Connected\n";
-
 }
 
 void Client::Send(ClientData* msg)
