@@ -1,0 +1,7 @@
+﻿  ClientData.cpp
+C:\Users\1\source\repos\ServerLoc\ServerLoc\ClientData.h(95,12): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\1\source\repos\ServerLoc\ServerLoc\ClientData.cpp(45,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\1\source\repos\ServerLoc\ServerLoc\ClientData.cpp(72,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\1\source\repos\ServerLoc\ServerLoc\ClientData.cpp(82,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\1\source\repos\ServerLoc\ServerLoc\ClientData.cpp(108,20): warning C4018: <: несоответствие типов со знаком и без знака
+  ServerLoc.vcxproj -> C:\Users\1\source\repos\ServerLoc\Debug\ServerLoc.exe

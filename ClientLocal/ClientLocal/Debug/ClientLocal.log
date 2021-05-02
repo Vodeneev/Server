@@ -1,0 +1,5 @@
+﻿  ClientData.cpp
+C:\Users\1\source\repos\ClientLocal\ClientLocal\ClientData.cpp(13,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\1\source\repos\ClientLocal\ClientLocal\ClientData.cpp(44,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\1\source\repos\ClientLocal\ClientLocal\ClientData.cpp(73,20): warning C4018: <: несоответствие типов со знаком и без знака
+  ClientLocal.vcxproj -> C:\Users\1\source\repos\ClientLocal\Debug\ClientLocal.exe
